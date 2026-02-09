@@ -33,13 +33,13 @@ jobs:
       - name: Build Solution
         run: dotnet build --no-restore --configuration Release
 
-      # Run tests and produce NUnit results
-      - name: Run Selenium / NUnit / RestAssured.Net Tests
+      - name: Run Selenium / NUnit / RestAssured Tests
         run: |
-          dotnet test \
+          mkdir test-results
+          dotnet test TestProject1/TestProject1.csproj \
             --no-build \
             --configuration Release \
-            --logger "nunit;LogFilePath=test-results/TEST-results.xml"
+            --logger "nunit;LogFilePath=test-results/nunit-results.xml"
 
       # Publish test results using the Marketplace action
       - name: Publish Test Results
