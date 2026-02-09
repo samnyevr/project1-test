@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Install .NET SDK for your version
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x  # change if needed
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Solution
+        run: dotnet build --no-restore --configuration Release
+
+      # Run tests and produce NUnit results
+      - name: Run Selenium / NUnit / RestAssured.Net Tests
+        run: |
+          dotnet test \
+            --no-build \
+            --configuration Release \
+            --logger "nunit;LogFilePath=test-results/TEST-results.xml"
+
+      # Publish test results using the Marketplace action
+      - name: Publish Test Results
+        uses: sergiocampama/publish-test-results@v1
+        with:
+          # Path to the NUnit XML results
+          results_path: test-results/TEST-results.xml
+          # (Optional) Format, default tries to infer
+          test_runner: nunit
