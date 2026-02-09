@@ -39,7 +39,8 @@ jobs:
           dotnet test TestProject1/TestProject1.csproj \
             --no-build \
             --configuration Release \
-            --logger "nunit;LogFilePath=test-results/nunit-results.xml"
+            --results-directory test-results \
+            --logger "trx;LogFileName=test-results.trx"
 
       # Publish test results using the Marketplace action
       - name: Publish Test Results
