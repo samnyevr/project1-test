@@ -12,18 +12,17 @@ namespace MyNamespace {
 
         [Given(@"I have entered (.*) into the calculator")]
         public void GivenIhaveenteredintothecalculator(decimal args1) {
-            _scenarioContext.Pending();
+            throw new PendingStepException();
         }
 
         [When(@"I press add")]
         public void WhenIpressadd() {
-            _scenarioContext.Pending();
+            throw new PendingStepException();
         }
 
         [Then(@"the result should be (.*) on the screen")]
         public void Thentheresultshouldbeonthescreen(decimal args1) {
-            _scenarioContext.Pending();
+            throw new PendingStepException();
         }
-
     }
 }
