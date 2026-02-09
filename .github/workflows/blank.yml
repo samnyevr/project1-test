@@ -33,13 +33,14 @@ jobs:
       - name: Build Solution
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run Selenium / NUnit / RestAssured Tests
+      - name: Run Tests (with guaranteed results file)
+        shell: pwsh
         run: |
           mkdir test-results
-          dotnet test TestProject1/TestProject1.csproj \
-            --no-build \
-            --configuration Release \
-            --results-directory test-results \
+          dotnet test TestProject1/TestProject1.csproj `
+            --no-build `
+            --configuration Release `
+            --results-directory test-results `
             --logger "trx;LogFileName=test-results.trx"
 
       # Publish test results using the Marketplace action
