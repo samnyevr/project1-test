@@ -45,6 +45,12 @@ namespace FidelityInsights.Hooks
             // Recommended options for running Chrome in containers or CI
             options.AddArgument("--no-sandbox");
             options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("--disable-setuid-sandbox");
+            options.AddArgument("--remote-allow-origins=*");   // prevents "Chrome exited"
+            options.AddArgument("--disable-blink-features=AutomationControlled");
+            options.AddExcludedArgument("enable-automation");
 
             // Set download directory for file downloads
             var downloadPath = Path.Combine(
