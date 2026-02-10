@@ -13,7 +13,7 @@ jobs:
 
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: '/TestProject1.slnx'
+      SOLUTION: 'TestProject1.slnx'
 
     runs-on: ubuntu-latest
 
