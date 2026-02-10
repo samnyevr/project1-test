@@ -11,25 +11,28 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace TestProject1.Features
+namespace FidelityInsights.Features
 {
     
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Calculator")]
+    [global::NUnit.Framework.DescriptionAttribute("Jump to Date")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
-    public partial class CalculatorFeature
+    [global::NUnit.Framework.CategoryAttribute("trading-session")]
+    public partial class JumpToDateFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
-        private static string[] featureTags = ((string[])(null));
+        private static string[] featureTags = new string[] {
+                "trading-session"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en"), "Features", "Calculator", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Jump to Date", "  As a trader\n  I want to be able to jump to a specific date in the trading sessi" +
+                "on", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "Calculator.feature"
+#line 1 "jump-to-date.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -105,23 +108,23 @@ namespace TestProject1.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Calculator.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/jump-to-date.feature.ndjson", 3);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("Add two numbers")]
-        [global::NUnit.Framework.CategoryAttribute("mytag")]
-        public async global::System.Threading.Tasks.Task AddTwoNumbers()
+        [global::NUnit.Framework.DescriptionAttribute("Jump to a specific date")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
+        public async global::System.Threading.Tasks.Task JumpToASpecificDate()
         {
             string[] tagsOfScenario = new string[] {
-                    "mytag"};
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Add two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Jump to a specific date", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 4
-this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line 7
+    this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -130,17 +133,29 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 5
-    await testRunner.GivenAsync("I have entered 50 into the calculator", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 6
-    await testRunner.AndAsync("I have entered 70 into the calculator", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 7
-    await testRunner.WhenAsync("I press add", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
 #line 8
-    await testRunner.ThenAsync("the result should be 120 on the screen", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+        await testRunner.GivenAsync("the trader is on the Training Session page under the Trade Stock section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 9
+        await testRunner.WhenAsync("the trader clicks on the Jump To Date button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 10
+        await testRunner.AndAsync("the trader selects the date \"2010-12-31\" from the date picker", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 11
+        await testRunner.ThenAsync("the trader can see the trading session date has changed to \"2010-12-31\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 12
+        await testRunner.AndAsync("the trader can see the Since 14 days ago popup", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 13
+        await testRunner.AndAsync("the trader can see Portfolio value change from 14 days ago", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 14
+        await testRunner.AndAsync("the trader can see number of Holdings", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 15
+        await testRunner.AndAsync("the trader can see the date has advanced to \"2010-12-31\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
