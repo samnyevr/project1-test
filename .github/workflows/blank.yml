@@ -1,39 +1,48 @@
-# This is a basic workflow to help you get started with Actions
+name: CI - Selenium + NUnit + BDD
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+permissions:
+  contents: read
+  checks: write   # needed for publishing check runs
 
 jobs:
   test:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      # 1️⃣ Checkout repo
+      - uses: actions/checkout@v4
 
-      # Install .NET SDK for your version
-      - name: Setup .NET SDK
+      # 2️⃣ Setup .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x  # change if needed
+          dotnet-version: 7.0.x
 
-      - name: Restore Dependencies
+      # 3️⃣ Restore dependencies
+      - name: Restore
         run: dotnet restore
 
-      - name: Build Solution
+      # 4️⃣ Build project
+      - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run Tests (with guaranteed results file)
+      # 5️⃣ Start frontend app in background (if you want Selenium to test it)
+      #    Optional: only if your app is React/Vite and tests localhost:5173
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: frontend  # <-- change to your frontend folder
+
+      - name: Start frontend in background
+        run: npm run dev &
+        working-directory: frontend
+
+      # 6️⃣ Run tests (headless Chrome + TRX output)
+      - name: Run Tests
         shell: pwsh
         run: |
           mkdir test-results
@@ -43,12 +52,10 @@ jobs:
             --results-directory test-results `
             --logger "trx;LogFileName=test-results.trx"
 
-      # Publish test results using the Marketplace action
+      # 7️⃣ Publish test results safely (annotations only mode)
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/windows@v2
-        if: (!cancelled())
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: |
-            test-results/**/*.xml
-            test-results/**/*.trx
-            test-results/**/*.json
+          files: 'test-results/**/*.trx'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          mode: annotations-only
