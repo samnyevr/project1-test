@@ -50,23 +50,19 @@
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.14.0, )"
-            },
-            "NUnit": {
-              "target": "Package",
-              "version": "[4.3.2, )"
-            },
-            "NUnit.Analyzers": {
-              "target": "Package",
-              "version": "[4.7.0, )"
+              "version": "[17.14.1, )"
             },
             "NUnit3TestAdapter": {
               "target": "Package",
-              "version": "[5.0.0, )"
+              "version": "[5.1.0, )"
             },
-            "Reqnroll": {
+            "Reqnroll.NUnit": {
               "target": "Package",
-              "version": "[3.3.3, )"
+              "version": "[3.2.0, )"
+            },
+            "RestAssured.Net": {
+              "target": "Package",
+              "version": "[4.10.0, )"
             },
             "Selenium.Support": {
               "target": "Package",
@@ -78,23 +74,11 @@
             },
             "Selenium.WebDriver.ChromeDriver": {
               "target": "Package",
-              "version": "[80.0.3987.10600, )"
+              "version": "[144.0.7559.13300, )"
             },
-            "SpecFlow.Assist.Dynamic": {
+            "nunit": {
               "target": "Package",
-              "version": "[1.4.2, )"
-            },
-            "SpecFlow.NUnit": {
-              "target": "Package",
-              "version": "[3.9.74, )"
-            },
-            "SpecFlow.Plus.LivingDocPlugin": {
-              "target": "Package",
-              "version": "[3.9.57, )"
-            },
-            "coverlet.collector": {
-              "target": "Package",
-              "version": "[6.0.4, )"
+              "version": "[4.4.0, )"
             }
           },
           "imports": [
