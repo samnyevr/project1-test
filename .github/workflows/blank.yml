@@ -1,51 +1,45 @@
-name: CI - Selenium + NUnit + BDD
+name: CI
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches:
+    - main
   pull_request:
-
-permissions:
-  contents: read
-  checks: write   # needed for publishing check runs
-
+    branches:
+    - main
+    
 jobs:
-  test:
-    runs-on: windows-latest
+  build_and_test:
+
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'TestProject1.slnx'
+
+    runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repo
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
 
-      # 2️⃣ Setup .NET
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
 
-      # 3️⃣ Restore dependencies
-      - name: Restore
-        run: dotnet restore
 
-      # 4️⃣ Build project
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
+    - name: Restore dependencies
+      run: dotnet restore $SOLUTION
 
-      # 6️⃣ Run tests (headless Chrome + TRX output)
-      - name: Run Tests
-        shell: pwsh
-        run: |
-          mkdir test-results
-          dotnet test TestProject1/TestProject1.csproj `
-            --no-build `
-            --configuration Release `
-            --results-directory test-results `
-            --logger "trx;LogFileName=test-results.trx"
-
-      # 7️⃣ Publish test results safely (annotations only mode)
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: 'test-results/**/*.trx'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          mode: annotations-only
+    - name: Build
+      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG
+      
+    - name: Test
+      run: dotnet test $SOLUTION --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
+      
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: DotNET Tests
+        path: "**/test-results.trx"                            
+        reporter: dotnet-trx
+        fail-on-error: true
