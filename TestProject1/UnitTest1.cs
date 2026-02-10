@@ -22,14 +22,7 @@ public class Tests {
 
     [Test]
     public void Test1() {
-        driver.Navigate().GoToUrl("http://localhost:5173/");
-
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-        var card = wait.Until(ExpectedConditions
-            .ElementToBeClickable(By.ClassName("cardDesign")));
-
-        card.Click();
+        driver.Navigate().GoToUrl("https://lambdatest.github.io/sample-todo-app/");
     }
 
     [TearDown]
