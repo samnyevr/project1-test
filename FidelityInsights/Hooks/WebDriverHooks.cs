@@ -2,15 +2,13 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace FidelityInsights.Hooks
-{
+namespace FidelityInsights.Hooks {
     /// <summary>
     /// Hooks for managing the lifecycle of the Chrome WebDriver for each scenario.
     /// Responsible for starting and stopping the browser, and capturing screenshots on failure.
     /// </summary>
     [Binding]
-    public class WebDriverHooks
-    {
+    public class WebDriverHooks {
         private readonly DriverContext _driverContext;
         private readonly ScenarioContext _scenarioContext;
 
@@ -19,8 +17,7 @@ namespace FidelityInsights.Hooks
         /// </summary>
         /// <param name="driverContext">Shared context for the WebDriver instance.</param>
         /// <param name="scenarioContext">Provides information about the current scenario.</param>
-        public WebDriverHooks(DriverContext driverContext, ScenarioContext scenarioContext)
-        {
+        public WebDriverHooks(DriverContext driverContext, ScenarioContext scenarioContext) {
             _driverContext = driverContext;
             _scenarioContext = scenarioContext;
         }
@@ -30,14 +27,12 @@ namespace FidelityInsights.Hooks
         /// Configures headless mode for CI environments and sets browser options for stability.
         /// </summary>
         [BeforeScenario]
-        public void StartBrowser()
-        {
+        public void StartBrowser() {
             var options = new ChromeOptions();
 
             // Enable headless mode in CI environments by setting the HEADLESS environment variable to "true".
             var headless = Environment.GetEnvironmentVariable("HEADLESS")?.Equals("true", StringComparison.OrdinalIgnoreCase) == true;
-            if (headless)
-            {
+            if (headless) {
                 options.AddArgument("--headless=new");
                 options.AddArgument("--window-size=1920,1080");
             }
@@ -47,6 +42,7 @@ namespace FidelityInsights.Hooks
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--disable-gpu");
             options.AddArgument("--disable-extensions");
+            options.AddArgument("--disable-popup-blocking");
             options.AddArgument("--disable-setuid-sandbox");
             options.AddArgument("--remote-allow-origins=*");   // prevents "Chrome exited"
             options.AddArgument("--disable-blink-features=AutomationControlled");
@@ -77,39 +73,31 @@ namespace FidelityInsights.Hooks
         /// Takes a screenshot if the scenario failed, then quits and disposes the browser.
         /// </summary>
         [AfterScenario]
-        public void StopBrowser()
-        {
-            try
-            {
-                if (_scenarioContext.TestError != null)
-                {
+        public void StopBrowser() {
+            try {
+                if (_scenarioContext.TestError != null) {
                     // Capture a screenshot on failure for debugging
                     var screenshot = ((ITakesScreenshot)_driverContext.Driver).GetScreenshot();
                     var fileName = $"{Sanitize(_scenarioContext.ScenarioInfo.Title)}.png";
                     Directory.CreateDirectory("artifacts/screenshots");
                     screenshot.SaveAsFile(Path.Combine("artifacts/screenshots", fileName));
                 }
-            }
-            finally
-            {
+            } finally {
                 // Always quit and dispose the driver to free resources
                 _driverContext.Driver.Quit();
                 _driverContext.Driver.Dispose();
             }
         }
         // for use with png download verification
-        public void CleanupDownloads()
-        {
+        public void CleanupDownloads() {
             var downloadPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "artifacts",
                 "downloads"
             );
 
-            if (Directory.Exists(downloadPath))
-            {
-                foreach (var file in Directory.GetFiles(downloadPath))
-                {
+            if (Directory.Exists(downloadPath)) {
+                foreach (var file in Directory.GetFiles(downloadPath)) {
                     File.Delete(file);
                 }
             }

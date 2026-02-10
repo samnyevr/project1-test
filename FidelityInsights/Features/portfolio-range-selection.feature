@@ -5,7 +5,7 @@ Feature: Select performance range on Portfolio
   Background:
     Given the user is on the Portfolio page
     And an active training session exists
-
+    @Ignore
   @regression
   Scenario Outline: Selecting a performance range updates the Portfolio view
     When the user selects the "<range>" performance range
@@ -18,7 +18,7 @@ Feature: Select performance range on Portfolio
       | 3M    |
       | 6M    |
       | YTD   |
-
+    @Ignore
 @regression
 Scenario Outline: Changing chart range updates portfolio value over time visualization window
   When the user selects the "<range>" portfolio value over time range

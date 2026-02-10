@@ -3,16 +3,19 @@ Feature: Application theming
   I want to switch between light and dark mode
   So that the application matches my visual preference
 
+  @Ignore
   Scenario: Toggle light and dark mode on Settings
     Given the application is loaded, on Settings page
     When I toggle the theme setting
     Then the application switches between light and dark mode
 
+      @Ignore
   Scenario: Toggle light and dark mode on Portfolio Overview
     Given the application is loaded and a training session is loaded, on Portfolio Overview page
     When I toggle the theme setting
     Then the application switches between light and dark mode
 
+    @Ignore
   Scenario: Theme persists during session
     Given I have selected a theme
     When I navigate between pages

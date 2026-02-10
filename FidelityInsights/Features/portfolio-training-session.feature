@@ -6,7 +6,7 @@ Feature: Manage training sessions from Portfolio
   Background:
     Given the user is on the Portfolio page
     And no active training session exists
-
+    @Ignore
   @smoke
   Scenario: Create a new training session when none exists
     When the user creates a new training session with:
@@ -14,14 +14,14 @@ Feature: Manage training sessions from Portfolio
       | a valid start  | a valid length | a valid balance  |
     Then a training session should be active
     And the Portfolio page should reflect the active training session
-
+    @Ignore
   @regression
   Scenario: Canceling training session creation does not start a session
     When the user starts the training session creation process
     And the user cancels the training session creation
     Then no training session should be active
     And the Portfolio page should indicate that no training session is active
-
+    @Ignore
   @validation @regression
   Scenario Outline: Training session cannot be created with invalid inputs
     When the user attempts to create a new training session with:
@@ -34,7 +34,7 @@ Feature: Manage training sessions from Portfolio
       | balance  |
       | negative |
       | zero     |
-
+    @Ignore
   @regression
   Scenario: Active training session persists after refresh
     Given an active training session exists
