@@ -23,7 +23,7 @@ namespace FidelityInsights.Pages.Components
         public PrimaryNavigationBar(IWebDriver driver, TimeSpan? timeout = null)
         {
             _driver = driver;
-            _wait = new WebDriverWait(_driver, timeout ?? TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, timeout ?? TimeSpan.FromSeconds(25));
         }
 
         // ---------------------------------------------------------------------

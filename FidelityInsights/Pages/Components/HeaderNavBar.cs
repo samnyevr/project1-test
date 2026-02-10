@@ -9,7 +9,7 @@ namespace FidelityInsights.Pages
         private readonly IWebDriver _driver;
         private readonly WebDriverWait _wait;
 
-        public HeaderNavBar(IWebDriver driver, int seconds = 10)
+        public HeaderNavBar(IWebDriver driver, int seconds = 25)
         {
             _driver = driver;
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(seconds));

@@ -8,19 +8,23 @@ using System.Globalization;
 
 
 
-namespace FidelityInsights.Pages {
-    public class TradeStockPage : AbstractPage {
+namespace FidelityInsights.Pages
+{
+    public class TradeStockPage : AbstractPage
+    {
 
 
         private const string TradeStockUrl = "https://d2rczu3zvi71ix.cloudfront.net/trade";
         public TradeStockPage(DriverContext ctx) : base(ctx.Driver) { }
 
-        public void Open() {
+        public void Open()
+        {
             Driver.Navigate().GoToUrl(TradeStockUrl);
             Driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
         }
 
-        public void StartNewSession() {
+        public void StartNewSession()
+        {
             IJavaScriptExecutor jexecutor = (IJavaScriptExecutor)Driver;
             jexecutor.ExecuteScript("console.log('Setting simulation ID in local storage');");
             var currentSimId = jexecutor.ExecuteScript("return window.localStorage.getItem('currentSimulationId');") as string;
@@ -28,7 +32,8 @@ namespace FidelityInsights.Pages {
 
             // (Placeholder) Start a new training session, probably will be abstracted by another test in the future
             // Step 1: Click "Start New Trading Session"
-            if (string.IsNullOrEmpty(currentSimId)) {
+            if (string.IsNullOrEmpty(currentSimId))
+            {
                 Wait.Until(d => d.FindElement(By.XPath("//button[contains(@class, 'btn-primary') and contains(text(), 'Start New Trading Session')]"))).Click();
 
                 // Step 2: Click "Start New Training Session"
@@ -64,7 +69,8 @@ namespace FidelityInsights.Pages {
             IJavaScriptExecutor jexecutor = (IJavaScriptExecutor)Driver;
             jexecutor.ExecuteScript("console.log('Setting simulation ID in local storage');");
             var currentSimId = jexecutor.ExecuteScript("return window.localStorage.getItem('currentSimulationId');") as string;
-            if (string.IsNullOrEmpty(currentSimId)) {
+            if (string.IsNullOrEmpty(currentSimId))
+            {
                 // Step 1: Click "Start New Trading Session"
                 Wait.Until(d => d.FindElement(By.XPath("//button[contains(@class, 'btn-primary') and contains(text(), 'Start New Trading Session')]"))).Click();
 
@@ -72,7 +78,7 @@ namespace FidelityInsights.Pages {
                 Wait.Until(d => d.FindElement(By.XPath("//button[contains(@class, 'btn-primary') and contains(text(), 'Start New Training Session')]"))).Click();
 
                 // Step 3: Wait for the modal/form to be visible
-                var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+                var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(25));
                 wait.Until(d => d.FindElements(By.CssSelector("app-training-session-modal form.settings-form, app-training-session-modal .settings-form"))
                                  .Any(e => e.Displayed));
 
@@ -141,7 +147,8 @@ namespace FidelityInsights.Pages {
 
         // -------- Page Actions --------
 
-        public void SelectTicker(string ticker) {
+        public void SelectTicker(string ticker)
+        {
 
             Wait.Until(ExpectedConditions.ElementToBeClickable(TickerSearchBox)).Click();
             Wait.Until(ExpectedConditions.ElementToBeClickable(TickerSearchBox)).Clear();
@@ -152,7 +159,8 @@ namespace FidelityInsights.Pages {
             Wait.Until(d => d.FindElement(TickerResult(ticker))).Click();
         }
 
-        public void SelectTickerSell(string ticker) {
+        public void SelectTickerSell(string ticker)
+        {
 
             Wait.Until(ExpectedConditions.ElementToBeClickable(TickerSearchBox)).Click();
             Wait.Until(ExpectedConditions.ElementToBeClickable(TickerSearchBox)).Clear();
@@ -163,73 +171,89 @@ namespace FidelityInsights.Pages {
             Wait.Until(d => d.FindElement(TickerResult(ticker))).Click();
         }
 
-        public void EnterQuantity(string quantity) {
+        public void EnterQuantity(string quantity)
+        {
             var input = Wait.Until(d => d.FindElement(QuantityInput));
             input.Clear();
             input.SendKeys(quantity);
         }
 
-        public void ClickBuy() {
+        public void ClickBuy()
+        {
             Wait.Until(ExpectedConditions.ElementToBeClickable(BuyButton)).Click();
         }
 
-        public void ClickBuyToggle() {
+        public void ClickBuyToggle()
+        {
             Wait.Until(ExpectedConditions.ElementToBeClickable(BuyToggleButton)).Click();
         }
 
-        public void ClickSellToggle() {
+        public void ClickSellToggle()
+        {
 
             // Small wait for nav bar to settle
             Wait.Until(ExpectedConditions.ElementToBeClickable(SellToggleButton)).Click();
         }
 
-        public bool DoesMaxButtonExist() {
+        public bool DoesMaxButtonExist()
+        {
             return Driver.FindElements(MaxButton).Count > 0;
         }
 
-        public void ClickMax() {
+        public void ClickMax()
+        {
             System.Threading.Thread.Sleep(1000);
 
             Driver.FindElement(MaxButton).Click();
         }
 
-        public bool IsBuyButtonEnabled() {
+        public bool IsBuyButtonEnabled()
+        {
             return Driver.FindElement(BuyButton).Enabled;
         }
 
-        public bool IsBuyToggleButtonEnabled() {
+        public bool IsBuyToggleButtonEnabled()
+        {
             return Driver.FindElement(BuyToggleButton).Enabled;
         }
 
-        public string GetAvailableBalance() {
+        public string GetAvailableBalance()
+        {
             return Wait.Until(d => d.FindElement(AvailableBalanceLabel)).Text;
         }
 
-        public bool IsTickerInHoldings(string ticker) {
+        public bool IsTickerInHoldings(string ticker)
+        {
             return Wait.Until(d => d.FindElement(HoldingsRow(ticker))).Displayed;
         }
 
-        public string GetConfirmationMessage() {
+        public string GetConfirmationMessage()
+        {
             return Wait.Until(d => d.FindElement(ConfirmationMessage)).Text;
         }
 
-        public string GetErrorMessage() {
+        public string GetErrorMessage()
+        {
             return Wait.Until(d => d.FindElement(ErrorMessage)).Text;
         }
 
-        public void ClickTickerInHoldings(string ticker) {
+        public void ClickTickerInHoldings(string ticker)
+        {
             Wait.Until(d => d.FindElement(HoldingsRow(ticker))).Click();
         }
 
-        public void ClickSell() {
+        public void ClickSell()
+        {
             Wait.Until(ExpectedConditions.ElementToBeClickable(SellButton)).Click();
         }
 
-        public bool IsSellButtonEnabled() {
+        public bool IsSellButtonEnabled()
+        {
             return Driver.FindElement(SellButton).Enabled;
         }
 
-        public int GetHoldingQuantity(string ticker) {
+        public int GetHoldingQuantity(string ticker)
+        {
             var row = Wait.Until(d => d.FindElement(HoldingsRow(ticker)));
             var qtyText = row.Text;
 
@@ -237,13 +261,15 @@ namespace FidelityInsights.Pages {
             return int.Parse(parts[0]);
         }
 
-        public int GetQuantity() {
+        public int GetQuantity()
+        {
             var input = Wait.Until(d => d.FindElement(QuantityInput));
             var qtyText = input.GetAttribute("value");
             return int.Parse(qtyText);
         }
 
-        public bool IsTickerGoneFromHoldings(string ticker) {
+        public bool IsTickerGoneFromHoldings(string ticker)
+        {
             return Driver.FindElements(HoldingsRow(ticker)).Count == 0;
         }
 

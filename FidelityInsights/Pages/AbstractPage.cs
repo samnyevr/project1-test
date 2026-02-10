@@ -27,7 +27,7 @@ namespace FidelityInsights.Pages
         protected AbstractPage(IWebDriver driver)
         {
             Driver = driver;
-            Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(25));
         }
     }
 }

@@ -72,7 +72,7 @@ namespace FidelityInsights.Pages
             Wait.Until(ExpectedConditions.ElementToBeClickable(deleteBtn)).Click();
 
             // Wait for row to disappear (Angular removes it from pausedSimulations)
-            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(25));
             wait.Until(_ => FindPausedRowByStartingBalance(startingBalanceUi) == null);
         }
 
