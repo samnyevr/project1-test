@@ -105,6 +105,15 @@ namespace FidelityInsights.Features
             await testRunner.CollectScenarioErrorsAsync();
         }
         
+        public virtual async global::System.Threading.Tasks.Task FeatureBackgroundAsync()
+        {
+#line 6
+      #line hidden
+#line 7
+        await testRunner.GivenAsync("a new funded trading session is started", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+        }
+        
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
             return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/buy-stock.feature.ndjson", 6);
@@ -120,7 +129,7 @@ namespace FidelityInsights.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Buy a stock successfully", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 6
+#line 9
     this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -130,24 +139,27 @@ namespace FidelityInsights.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 7
-        await testRunner.GivenAsync("the trader select a stock with ticker \"AAL\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 8
-        await testRunner.WhenAsync("the trader input a Quantity of \"100\" shares", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 9
-        await testRunner.AndAsync("the trader click on the Buy button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 6
+      await this.FeatureBackgroundAsync();
 #line hidden
 #line 10
-        await testRunner.ThenAsync("the \"100\" \"AAL\" shares should be added to Your Holdings section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+        await testRunner.GivenAsync("the trader select a stock with ticker \"AAL\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 11
-        await testRunner.AndAsync("the available balance should be reduced accordingly", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+        await testRunner.WhenAsync("the trader input a Quantity of \"100\" shares", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 12
+        await testRunner.AndAsync("the trader click on the Buy button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 13
+        await testRunner.ThenAsync("the \"100\" \"AAL\" shares should be added to Your Holdings section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 14
+        await testRunner.AndAsync("the available balance should be reduced accordingly", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 15
         await testRunner.AndAsync("the trader is shown a confirmation message \"Successfully bought 100 shares of AAL" +
-                        " at $6.00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+                        " at $5.00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -163,7 +175,7 @@ namespace FidelityInsights.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Buy a stock successfully with Maximum Quantity", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 14
+#line 17
     this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -173,24 +185,27 @@ namespace FidelityInsights.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 15
-        await testRunner.GivenAsync("the trader select a stock with ticker \"AAL\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 16
-        await testRunner.WhenAsync("the trader click on the Max button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 17
-        await testRunner.AndAsync("the trader click on the Buy button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 6
+      await this.FeatureBackgroundAsync();
 #line hidden
 #line 18
-        await testRunner.ThenAsync("the maximum available \"AAL\" shares should be added to Your Holdings section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+        await testRunner.GivenAsync("the trader select a stock with ticker \"AAL\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 19
-        await testRunner.AndAsync("the available balance should be reduced accordingly", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+        await testRunner.WhenAsync("the trader click on the Max button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 20
-        await testRunner.AndAsync("the trader is shown a confirmation message \"Successfully bought 1666666 shares of" +
-                        " AAL at $6.00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+        await testRunner.AndAsync("the trader click on the Buy button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 21
+        await testRunner.ThenAsync("the maximum available \"AAL\" shares should be added to Your Holdings section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 22
+        await testRunner.AndAsync("the available balance should be reduced accordingly", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 23
+        await testRunner.AndAsync("the trader is shown a confirmation message \"Successfully bought 181818181 shares " +
+                        "of AAL at $5.00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -206,7 +221,7 @@ namespace FidelityInsights.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Buy a stock without available balance", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 22
+#line 25
     this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -216,19 +231,22 @@ namespace FidelityInsights.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 23
-        await testRunner.GivenAsync("the trader has an available balance of \"$6.00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 24
-        await testRunner.AndAsync("the trader select a stock with ticker \"AAL\" in max", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 25
-        await testRunner.WhenAsync("the trader input a Quantity of \"10\" shares", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 6
+      await this.FeatureBackgroundAsync();
 #line hidden
 #line 26
-        await testRunner.ThenAsync("the Buy button should be disabled", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+        await testRunner.GivenAsync("the trader has an available balance of \"$6.00\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 27
+        await testRunner.AndAsync("the trader select a stock with ticker \"AAL\" in max", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 28
+        await testRunner.WhenAsync("the trader input a Quantity of \"10\" shares", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 29
+        await testRunner.ThenAsync("the Buy button should be disabled", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 30
         await testRunner.AndAsync("the trader is shown an error message \"Insufficient funds for this purchase.\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -245,7 +263,7 @@ namespace FidelityInsights.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Buy a stock with quick buy functionality", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 29
+#line 32
     this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -255,16 +273,19 @@ namespace FidelityInsights.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 30
-        await testRunner.GivenAsync("the trader click on \"AAL\" in Your Holdings section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 31
-        await testRunner.WhenAsync("the trader click on the Buy Toggle button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 32
-        await testRunner.ThenAsync("the trader can input the desired Quantity of shares", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 6
+      await this.FeatureBackgroundAsync();
 #line hidden
 #line 33
+        await testRunner.GivenAsync("the trader click on \"AAL\" in Your Holdings section", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 34
+        await testRunner.WhenAsync("the trader click on the Buy Toggle button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 35
+        await testRunner.ThenAsync("the trader can input the desired Quantity of shares", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 36
         await testRunner.AndAsync("the trader can click on the Buy button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }

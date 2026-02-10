@@ -30,41 +30,30 @@ namespace FidelityInsights.Hooks {
         public void StartBrowser() {
             var options = new ChromeOptions();
 
-            // Enable headless mode in CI environments by setting the HEADLESS environment variable to "true".
+            // Headless in CI if environment variable is set
             var headless = Environment.GetEnvironmentVariable("HEADLESS")?.Equals("true", StringComparison.OrdinalIgnoreCase) == true;
             if (headless) {
                 options.AddArgument("--headless=new");
                 options.AddArgument("--window-size=1920,1080");
+                options.AddArgument("--disable-gpu");
             }
 
-            // Recommended options for running Chrome in containers or CI
+            // Flags required for stability in CI / containerised environments
             options.AddArgument("--no-sandbox");
             options.AddArgument("--disable-dev-shm-usage");
-            options.AddArgument("--disable-gpu");
-            options.AddArgument("--disable-extensions");
-            options.AddArgument("--disable-popup-blocking");
-            options.AddArgument("--disable-setuid-sandbox");
-            options.AddArgument("--remote-allow-origins=*");   // prevents "Chrome exited"
-            options.AddArgument("--disable-blink-features=AutomationControlled");
-            options.AddExcludedArgument("enable-automation");
+            options.AddArgument("--remote-allow-origins=*"); // required for Chrome 114+ in CI
 
-            // Set download directory for file downloads
-            var downloadPath = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                "artifacts",
-                "downloads"
-            );
 
+            // Set download directory
+            var downloadPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "artifacts", "downloads");
             Directory.CreateDirectory(downloadPath);
-
             options.AddUserProfilePreference("download.default_directory", downloadPath);
             options.AddUserProfilePreference("download.prompt_for_download", false);
             options.AddUserProfilePreference("download.directory_upgrade", true);
             options.AddUserProfilePreference("safebrowsing.enabled", true);
 
-            // Instantiate the ChromeDriver with the specified options
+            // Instantiate driver
             _driverContext.Driver = new ChromeDriver(options);
-            // Set implicit wait to 0; prefer explicit waits for reliability
             _driverContext.Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(0);
         }
 

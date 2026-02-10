@@ -1,5 +1,6 @@
 using FidelityInsights.Pages;
 using NUnit.Framework;
+using OpenQA.Selenium.Support.UI;
 using Reqnroll;
 
 namespace FidelityInsights.StepDefinitions {
@@ -12,25 +13,19 @@ namespace FidelityInsights.StepDefinitions {
         public BuyStockSteps(
             TradeStockPage buyStockPage,
             PortfolioOverviewPage portfolio,
-            ScenarioContext scenario)
-        {
+            ScenarioContext scenario) {
             _buyStockPage = buyStockPage;
             _portfolio = portfolio;
             _scenario = scenario;
         }
 
         [Given("a new funded trading session is started")]
-        public void GivenANewFundedTradingSessionIsStarted()
-        {
+        public void GivenANewFundedTradingSessionIsStarted() {
             _portfolio.Open();
-
             var (created, startingBalanceUi) =
                 _portfolio.EnsureActiveTrainingSessionWithUniqueBalance();
-
-            // These are what your AfterScenario hook is looking for
             _scenario["CreatedSession"] = created;
             _scenario["CreatedStartingBalanceUi"] = startingBalanceUi;
-
             _portfolio.NavigateToTradeStocksFromHeader();
         }
 
@@ -62,17 +57,16 @@ namespace FidelityInsights.StepDefinitions {
 
         [Then("the available balance should be reduced accordingly")]
         public void ThenBalanceReduced() {
-            var balance = _buyStockPage.GetAvailableBalance();
-
-            Assert.That(balance, Is.Not.Null.And.Not.Empty,
-                "Available balance should be visible after purchase");
+            Assert.That(
+                _buyStockPage.GetAvailableBalance(),
+                Is.Not.Null.And.Not.Empty,
+                "Available balance should be visible after purchase"
+            );
         }
 
         [Then("the trader is shown a confirmation message \"(.*)\"")]
         public void ThenConfirmationMessageShown(string expectedMessage) {
-            var actualMessage = _buyStockPage.GetConfirmationMessage();
-
-            Assert.That(actualMessage, Is.EqualTo(expectedMessage));
+            Assert.That(_buyStockPage.GetConfirmationMessage(), Is.EqualTo(expectedMessage));
         }
 
         // -------- Scenario 2: Max Buy --------
@@ -105,16 +99,12 @@ namespace FidelityInsights.StepDefinitions {
 
         [Then("the available balance should be reduced accordingly in buy step")]
         public void ThenBalanceReducedInBuyStep() {
-            var balance = _buyStockPage.GetAvailableBalance();
-
-            Assert.That(balance, Is.Not.Null.And.Not.Empty);
+            Assert.That(_buyStockPage.GetAvailableBalance(), Is.Not.Null.And.Not.Empty);
         }
 
         [Then("the trader is shown a confirmation message of \"(.*)\"")]
         public void ThenMaxConfirmationMessage(string message) {
-            var actual = _buyStockPage.GetConfirmationMessage();
-
-            Assert.That(actual, Is.EqualTo(message));
+            Assert.That(_buyStockPage.GetConfirmationMessage(), Is.EqualTo(message));
         }
 
         // -------- Scenario 3: Insufficient Funds --------
@@ -126,18 +116,8 @@ namespace FidelityInsights.StepDefinitions {
             _buyStockPage.ClickMax();
             _buyStockPage.ClickBuy();
 
-            System.Threading.Thread.Sleep(1000);
-
-            decimal expectedBalance =
-                decimal.Parse(balance.Replace("$", ""));
-
-            decimal actualBalance =
-                decimal.Parse(
-                    _buyStockPage.GetAvailableBalance()
-                        .Replace("$", "")
-                );
-
-            Assert.That(actualBalance, Is.LessThan(expectedBalance));
+            decimal expectedBalance = decimal.Parse(balance.Replace("$", ""));
+            _buyStockPage.WaitForBalanceBelow(expectedBalance);
         }
 
         [Given("the trader select a stock with ticker \"(.*)\" in max")]
@@ -147,8 +127,8 @@ namespace FidelityInsights.StepDefinitions {
 
         [When("the trader input a Quantity of \"(.*)\" shares in buy step")]
         public void WhenTraderInputsQuantityInBuyStep(string qty) {
-
-            System.Threading.Thread.Sleep(1000);
+            // FIX: was Thread.Sleep(1000) — EnterQuantity already waits for the input
+            // to be visible before interacting, so no sleep is needed.
             _buyStockPage.EnterQuantity(qty);
         }
 
@@ -163,20 +143,16 @@ namespace FidelityInsights.StepDefinitions {
 
         [Then("the trader is shown an error message \"(.*)\"")]
         public void ThenErrorMessageShown(string expectedError) {
-            var actualError = _buyStockPage.GetErrorMessage();
-
-            Assert.That(actualError, Is.EqualTo(expectedError));
+            Assert.That(_buyStockPage.GetErrorMessage(), Is.EqualTo(expectedError));
         }
 
         // -------- Scenario 4: Quick Buy --------
 
         [Given("the trader who is trying to sell click on \"(.*)\" in Your Holdings section")]
         public void GivenTraderSellClicksTickerInHoldings(string ticker) {
-            // Background already ensured active session and trade page
             _buyStockPage.SelectTicker(ticker);
             _buyStockPage.EnterQuantity("10");
             _buyStockPage.ClickBuy();
-
             _buyStockPage.ClickTickerInHoldings(ticker);
         }
 

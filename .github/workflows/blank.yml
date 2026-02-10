@@ -29,12 +29,7 @@ jobs:
         run: dotnet new install Reqnroll.Templates.DotNet
 
       - name: Install Chrome for Selenium
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-      - name: Check Chrome version
-        run: google-chrome --version
+        uses: browser-actions/setup-chrome@v1
 
       - name: Restore dependencies
         run: dotnet restore
