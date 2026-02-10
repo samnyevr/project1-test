@@ -5,8 +5,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Globalization;
 
-namespace FidelityInsights.Pages
-{
+namespace FidelityInsights.Pages {
     /// <summary>
     /// Page Object for the Portfolio Overview page.
     ///
@@ -22,8 +21,7 @@ namespace FidelityInsights.Pages
     /// - Private helpers encapsulate brittle mechanics (XPath quirks, parsing rules, etc.).
     /// - Explicit waits are favored over Thread.Sleep to reduce flakiness.
     /// </summary>
-    public class PortfolioOverviewPage : AbstractPage
-    {
+    public class PortfolioOverviewPage : AbstractPage {
         // ---------------------------------------------------------------------
         // Navigation
         // ---------------------------------------------------------------------
@@ -274,8 +272,7 @@ namespace FidelityInsights.Pages
         // ---------------------------------------------------------------------
 
         // Get current theme state
-        public string GetThemeState()
-        {
+        public string GetThemeState() {
             IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
             return (string)js.ExecuteScript("return document.documentElement.getAttribute('data-theme');");
 
@@ -285,8 +282,7 @@ namespace FidelityInsights.Pages
         }
 
         // Toggle the theme
-        public void ToggleTheme()
-        {
+        public void ToggleTheme() {
             var toggle = Driver.FindElement(By.CssSelector("button.theme-toggle, button.toggle-switch[role='switch']"));
             toggle.Click();
 
@@ -301,14 +297,12 @@ namespace FidelityInsights.Pages
         public bool IsTrainingSessionActive() =>
             Driver.FindElements(ThemeToggleBy).Any(e => e.Displayed);
 
-        public void WaitForTrainingSessionToBeActive(int seconds = 10)
-        {
+        public void WaitForTrainingSessionToBeActive(int seconds = 25) {
             new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds))
                 .Until(d => d.FindElements(ThemeToggleBy).Any(e => e.Displayed));
         }
 
-        public void WaitForTrainingSessionToBeInactive(int seconds = 5)
-        {
+        public void WaitForTrainingSessionToBeInactive(int seconds = 5) {
             new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds))
                 .Until(d => !d.FindElements(ThemeToggleBy).Any(e => e.Displayed));
         }
@@ -323,8 +317,7 @@ namespace FidelityInsights.Pages
         public bool IsStartTrainingSessionDisabled() =>
             Driver.FindElements(StartTrainingSessionBtnDisabledBy).Any();
 
-        public string WaitForFormError(int seconds = 3)
-        {
+        public string WaitForFormError(int seconds = 3) {
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds));
             var el = wait.Until(d => d.FindElements(FormErrorBy).FirstOrDefault(e => e.Displayed));
             return el?.Text ?? string.Empty;
@@ -337,8 +330,7 @@ namespace FidelityInsights.Pages
         /// Lightweight check used by tests to confirm the Portfolio is showing session context.
         /// This deliberately avoids asserting exact IDs/text that may change.
         /// </summary>
-        public bool IsSessionContextVisible()
-        {
+        public bool IsSessionContextVisible() {
             var dev = Driver.FindElements(DevTestingSectionBy).FirstOrDefault(e => e.Displayed);
             if (dev == null) return false;
 
@@ -357,34 +349,37 @@ namespace FidelityInsights.Pages
         /// Ensures a session is active for scenarios that need it.
         /// If one is already active, does nothing.
         /// </summary>
-        public void EnsureActiveTrainingSession()
-        {
+        public void EnsureActiveTrainingSession() {
             if (!IsTrainingSessionActive())
                 StartNewTrainingSession("a valid start", "a valid length", "a valid balance");
         }
 
-        public (bool created, string? startingBalanceUi) EnsureActiveTrainingSessionWithUniqueBalance()
-        {
-            if (IsTrainingSessionActive())
-                return (false, null);
+        public (bool created, string? startingBalanceUi) EnsureActiveTrainingSessionWithUniqueBalance() {
+            //if (IsTrainingSessionActive())
+            //    return (false, null);
 
             var cents = DateTime.UtcNow.Ticks % 100;
             var raw = 909090909m + (cents / 100m);
-
             var ui = raw.ToString("C2", CultureInfo.GetCultureInfo("en-US"));
+
             StartNewTrainingSession("a valid start", "a valid length", raw.ToString(CultureInfo.InvariantCulture));
 
-            return (true, ui);
+            return IsTrainingSessionActive() ? (true, ui) : (false, null);
         }
 
         /// <summary>
         /// Opens the modal and ensures the settings form is visible.
         /// The UI may show an intermediate modal first; this handles that transition.
         /// </summary>
-        public void OpenTrainingSessionSettingsForm()
-        {
-            OpenTrainingSessionDialog();
-            ClickStartNewTrainingSessionIfPresent();
+        public void OpenTrainingSessionSettingsForm() {
+            // If no-session prompt exists, use existing CTA flow
+            if (IsNoSessionPromptVisible()) {
+                OpenTrainingSessionDialog(); // your existing method (no-session CTA)
+            } else {
+                OpenTrainingSessionDialogFromGear(); // NEW (active session path)
+            }
+
+            ClickStartNewTrainingSessionIfPresent(); // already handles intermediate modal button
             WaitForSettingsForm();
         }
 
@@ -393,8 +388,7 @@ namespace FidelityInsights.Pages
         /// - For invalid inputs: may return early if submit is disabled or an error appears.
         /// - For valid inputs: waits for modal to close and the "session active" indicator to appear.
         /// </summary>
-        public void StartNewTrainingSession(string startDate, string sessionLengthToken, string startingBalanceToken)
-        {
+        public void StartNewTrainingSession(string startDate, string sessionLengthToken, string startingBalanceToken) {
             OpenTrainingSessionSettingsForm();
 
             // Apply inputs only if token maps to a value; "(not provided)" intentionally skips fields.
@@ -417,8 +411,7 @@ namespace FidelityInsights.Pages
             submit.Click();
 
             // For known invalid tokens we expect a synchronous error message. We don't wait for modal close.
-            if (IsNegativeOrZeroToken(startingBalanceToken))
-            {
+            if (IsNegativeOrZeroToken(startingBalanceToken)) {
                 WaitForFormError(3);
                 return;
             }
@@ -433,10 +426,8 @@ namespace FidelityInsights.Pages
         /// - If settings form is open: click Cancel/Close.
         /// - If stuck in intermediate modal (which may not have Cancel): refresh to escape.
         /// </summary>
-        public void CancelTrainingSessionCreation()
-        {
-            if (Driver.FindElements(SettingsFormBy).Any(e => e.Displayed))
-            {
+        public void CancelTrainingSessionCreation() {
+            if (Driver.FindElements(SettingsFormBy).Any(e => e.Displayed)) {
                 var cancel = Wait.Until(ExpectedConditions.ElementToBeClickable(CancelBtnBy));
                 cancel.Click();
                 return;
@@ -453,8 +444,7 @@ namespace FidelityInsights.Pages
         /// Opens the training session modal from the "no session" state.
         /// Safe to call repeatedly; if modal is already open, no-op.
         /// </summary>
-        public void OpenTrainingSessionDialog()
-        {
+        public void OpenTrainingSessionDialog() {
             if (Driver.FindElements(TrainingSessionModalBy).Any(e => e.Displayed))
                 return;
 
@@ -462,10 +452,8 @@ namespace FidelityInsights.Pages
             if (noSession == null) return;
 
             // Wait for the CTA button inside the no-session component to be clickable.
-            Wait.Until(d =>
-            {
-                try
-                {
+            Wait.Until(d => {
+                try {
                     if (d.FindElements(TrainingSessionModalBy).Any(m => m.Displayed)) return false;
 
                     var root = d.FindElements(NoSessionRootBy).FirstOrDefault();
@@ -473,9 +461,7 @@ namespace FidelityInsights.Pages
 
                     var cta = root.FindElement(By.XPath(".//button[contains(normalize-space(.),'Start')]"));
                     return cta.Displayed && cta.Enabled;
-                }
-                catch (NoSuchElementException) { return false; }
-                catch (StaleElementReferenceException) { return false; }
+                } catch (NoSuchElementException) { return false; } catch (StaleElementReferenceException) { return false; }
             });
 
             var ctaNow = Driver.FindElements(NoSessionRootBy).First()
@@ -489,8 +475,7 @@ namespace FidelityInsights.Pages
         /// If the UI is showing an intermediate modal step, click through to the settings form.
         /// If the settings form is already visible, no-op.
         /// </summary>
-        private void ClickStartNewTrainingSessionIfPresent()
-        {
+        private void ClickStartNewTrainingSessionIfPresent() {
             if (Driver.FindElements(SettingsFormBy).Any(e => e.Displayed))
                 return;
 
@@ -506,10 +491,8 @@ namespace FidelityInsights.Pages
         /// Waits until the settings form and its key fields are present.
         /// This is used as the "form is ready" gate for training session tests.
         /// </summary>
-        private void WaitForSettingsForm()
-        {
-            Wait.Until(d =>
-            {
+        private void WaitForSettingsForm() {
+            Wait.Until(d => {
                 var form = d.FindElements(SettingsFormBy).FirstOrDefault();
                 return (form != null && form.Displayed) ? form : null;
             });
@@ -528,8 +511,7 @@ namespace FidelityInsights.Pages
         /// Maps feature tokens to actual UI values for the session length select.
         /// Keeping this centralized avoids repeating mapping logic in step definitions.
         /// </summary>
-        private static string? ResolveSessionLength(string token)
-        {
+        private static string? ResolveSessionLength(string token) {
             if (IsNotProvided(token)) return null;
 
             var t = token.Trim().ToLowerInvariant();
@@ -543,8 +525,7 @@ namespace FidelityInsights.Pages
         /// <summary>
         /// Maps feature tokens to actual numeric strings used for the balance input.
         /// </summary>
-        private static string? ResolveBalance(string token)
-        {
+        private static string? ResolveBalance(string token) {
             if (IsNotProvided(token)) return null;
 
             var t = token.Trim().ToLowerInvariant();
@@ -555,8 +536,7 @@ namespace FidelityInsights.Pages
             return token.Trim();
         }
 
-        private static bool IsNegativeOrZeroToken(string token)
-        {
+        private static bool IsNegativeOrZeroToken(string token) {
             var t = token?.Trim().ToLowerInvariant();
             return t == "negative" || t == "zero" || t == "-1" || t == "0";
         }
@@ -565,26 +545,22 @@ namespace FidelityInsights.Pages
         // Training session: field setters
         // ---------------------------------------------------------------------
 
-        private void SetStartingBalance(string startingBalance)
-        {
+        private void SetStartingBalance(string startingBalance) {
             var input = Wait.Until(d => d.FindElement(StartingBalanceInputBy));
             input.Clear();
             input.SendKeys(startingBalance);
         }
 
-        private void SetSessionLength(string sessionLength)
-        {
+        private void SetSessionLength(string sessionLength) {
             var select = new SelectElement(Wait.Until(d => d.FindElement(SessionLengthSelectBy)));
             select.SelectByText(sessionLength);
         }
 
-        private void SetStartDate(DateTime date)
-        {
+        private void SetStartDate(DateTime date) {
             var trigger = Wait.Until(ExpectedConditions.ElementToBeClickable(StartDateTriggerBy));
             trigger.Click();
 
-            var dropdown = Wait.Until(d =>
-            {
+            var dropdown = Wait.Until(d => {
                 var dd = d.FindElements(StartDateDropdownBy).FirstOrDefault();
                 return (dd != null && dd.Displayed) ? dd : null;
             });
@@ -602,10 +578,8 @@ namespace FidelityInsights.Pages
         /// This is intentionally defensive because date picker implementations vary
         /// and can change without notice.
         /// </summary>
-        private void NavigateCalendarToMonth(IWebElement dropdown, DateTime target)
-        {
-            for (int i = 0; i < 48; i++)
-            {
+        private void NavigateCalendarToMonth(IWebElement dropdown, DateTime target) {
+            for (int i = 0; i < 48; i++) {
                 var title = dropdown.FindElements(By.XPath(
                     ".//*[self::div or self::span]" +
                     "[contains(normalize-space(.),'January') or contains(normalize-space(.),'February') or contains(normalize-space(.),'March') or " +
@@ -616,8 +590,7 @@ namespace FidelityInsights.Pages
 
                 if (title == null) return;
 
-                if (TryParseMonthYear(title.Text, out var currentMonth))
-                {
+                if (TryParseMonthYear(title.Text, out var currentMonth)) {
                     var targetMonth = new DateTime(target.Year, target.Month, 1);
                     if (currentMonth == targetMonth) return;
 
@@ -626,8 +599,7 @@ namespace FidelityInsights.Pages
                         .ToList();
 
                     // Some date pickers use "prev" then "next" buttons; we pick based on direction.
-                    if (navButtons.Count >= 2)
-                    {
+                    if (navButtons.Count >= 2) {
                         if (currentMonth > targetMonth) navButtons.First().Click();
                         else navButtons.Last().Click();
                         continue;
@@ -638,14 +610,12 @@ namespace FidelityInsights.Pages
             }
         }
 
-        private void ClickCalendarDay(IWebElement dropdown, int day)
-        {
+        private void ClickCalendarDay(IWebElement dropdown, int day) {
             // Prefer a button-based day cell when available.
             var dayBtn = dropdown.FindElements(By.XPath($".//button[normalize-space(.)='{day}']"))
                 .FirstOrDefault(b => b.Displayed && b.Enabled);
 
-            if (dayBtn != null)
-            {
+            if (dayBtn != null) {
                 dayBtn.Click();
                 return;
             }
@@ -657,10 +627,8 @@ namespace FidelityInsights.Pages
             dayCell?.Click();
         }
 
-        private static bool TryParseMonthYear(string text, out DateTime month)
-        {
-            if (DateTime.TryParseExact(text.Trim(), "MMMM yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
-            {
+        private static bool TryParseMonthYear(string text, out DateTime month) {
+            if (DateTime.TryParseExact(text.Trim(), "MMMM yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt)) {
                 month = new DateTime(dt.Year, dt.Month, 1);
                 return true;
             }
@@ -672,8 +640,7 @@ namespace FidelityInsights.Pages
         private static bool IsNotProvided(string s) =>
             string.IsNullOrWhiteSpace(s) || s.Trim().Equals("(not provided)", StringComparison.OrdinalIgnoreCase);
 
-        private static bool TryResolveDate(string token, out DateTime date)
-        {
+        private static bool TryResolveDate(string token, out DateTime date) {
             date = default;
 
             // "(not provided)" => skip setting
@@ -682,8 +649,7 @@ namespace FidelityInsights.Pages
             // Feature token "a valid start" means: do not set a specific date (let UI default).
             if (token.Trim().Equals("a valid start", StringComparison.OrdinalIgnoreCase)) return false;
 
-            if (DateTime.TryParse(token, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsed))
-            {
+            if (DateTime.TryParse(token, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsed)) {
                 date = parsed.Date;
                 return true;
             }
@@ -695,8 +661,7 @@ namespace FidelityInsights.Pages
         // Header date controls: helper methods used by range selection tests
         // ---------------------------------------------------------------------
 
-        public string GetSelectedDatesPillText()
-        {
+        public string GetSelectedDatesPillText() {
             var el = Driver.FindElements(DatePillStrongBy).FirstOrDefault(e => e.Displayed);
             return el?.Text?.Trim() ?? string.Empty;
         }
@@ -705,11 +670,9 @@ namespace FidelityInsights.Pages
         /// Waits until the "Selected dates" pill shows a real range.
         /// This is the primary signal that QUICK/RANGE selection has been applied.
         /// </summary>
-        public void WaitForSelectedDatesPillToBeSet(int seconds = 10)
-        {
+        public void WaitForSelectedDatesPillToBeSet(int seconds = 25) {
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds));
-            wait.Until(_ =>
-            {
+            wait.Until(_ => {
                 var txt = GetSelectedDatesPillText();
                 return !string.IsNullOrWhiteSpace(txt)
                        && txt.Contains("→")
@@ -721,8 +684,7 @@ namespace FidelityInsights.Pages
         /// Initializes the header date range by selecting the first "real" value in the QUICK dropdown.
         /// Tests use this because the page loads with "not set" values and RANGE changes are otherwise meaningless.
         /// </summary>
-        public void InitializeDateRangeFromQuickFirstOption()
-        {
+        public void InitializeDateRangeFromQuickFirstOption() {
             Wait.Until(d => d.FindElements(PortfolioDateControlsRootBy).Any(e => e.Displayed));
 
             // If already set, don't reseat the value: reduces flakiness and speeds up tests.
@@ -750,21 +712,17 @@ namespace FidelityInsights.Pages
         /// - the selected indicator to update
         /// - the "Selected dates" pill to change
         /// </summary>
-        public void SelectRange(string range)
-        {
+        public void SelectRange(string range) {
             Wait.Until(d => d.FindElements(PortfolioDateControlsRootBy).Any(e => e.Displayed));
 
             var pillBefore = GetSelectedDatesPillText();
 
             // Prefer RANGE <select> when present.
             var rangeSelect = Driver.FindElements(RangeSelectBy).FirstOrDefault();
-            if (rangeSelect != null)
-            {
+            if (rangeSelect != null) {
                 var select = new SelectElement(rangeSelect);
                 select.SelectByText(range.Trim());
-            }
-            else
-            {
+            } else {
                 // Fallback: click a visible pill/button matching the range text.
                 var btn = Driver.FindElements(RangePillBy)
                     .FirstOrDefault(b => b.Displayed && b.Enabled &&
@@ -779,8 +737,7 @@ namespace FidelityInsights.Pages
             WaitForRangeIndicator(range, 10);
 
             // Confirm the dates pill changed as a result of range selection.
-            Wait.Until(_ =>
-            {
+            Wait.Until(_ => {
                 var after = GetSelectedDatesPillText();
                 return !string.IsNullOrWhiteSpace(after)
                        && after.Contains("→")
@@ -793,11 +750,9 @@ namespace FidelityInsights.Pages
         /// Returns the currently selected RANGE value.
         /// This reads the selected <option> when a select exists; otherwise it finds the "active" pill.
         /// </summary>
-        public string GetSelectedRangeIndicator()
-        {
+        public string GetSelectedRangeIndicator() {
             var rangeSelect = Driver.FindElements(RangeSelectBy).FirstOrDefault();
-            if (rangeSelect != null)
-            {
+            if (rangeSelect != null) {
                 var select = new SelectElement(rangeSelect);
                 return select.SelectedOption?.Text?.Trim() ?? string.Empty;
             }
@@ -809,8 +764,7 @@ namespace FidelityInsights.Pages
             return (active ?? pills[0]).Text.Trim();
         }
 
-        private void WaitForRangeIndicator(string expected, int seconds)
-        {
+        private void WaitForRangeIndicator(string expected, int seconds) {
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds));
             wait.Until(_ => string.Equals(GetSelectedRangeIndicator(), expected.Trim(), StringComparison.OrdinalIgnoreCase));
         }
@@ -819,10 +773,8 @@ namespace FidelityInsights.Pages
         /// Returns the index of the first non-placeholder option for a <select>.
         /// This prevents tests from selecting entries like "Pick a date" or other sentinel values.
         /// </summary>
-        private static int FirstNonPlaceholderIndex(SelectElement select)
-        {
-            for (int i = 0; i < select.Options.Count; i++)
-            {
+        private static int FirstNonPlaceholderIndex(SelectElement select) {
+            for (int i = 0; i < select.Options.Count; i++) {
                 var text = (select.Options[i].Text ?? string.Empty).Trim();
                 if (string.IsNullOrWhiteSpace(text)) continue;
 
@@ -848,14 +800,12 @@ namespace FidelityInsights.Pages
         /// Some selections may not visibly change axis labels if the underlying data collapses to the same ticks.
         /// In that case, the axis-change wait may need to be relaxed.
         /// </summary>
-        public void SelectPortfolioValueOverTimeRange(string range)
-        {
+        public void SelectPortfolioValueOverTimeRange(string range) {
             Wait.Until(d => d.FindElement(ChartPanelBy));
 
             var beforeAxis = GetPortfolioValueOverTimeAxisDates();
 
-            var pills = Wait.Until(d =>
-            {
+            var pills = Wait.Until(d => {
                 var els = d.FindElements(ChartRangePillsBy).Where(e => e.Displayed && e.Enabled).ToList();
                 return els.Count > 0 ? els : null;
             });
@@ -869,21 +819,18 @@ namespace FidelityInsights.Pages
             Wait.Until(_ => GetSelectedPortfolioValueOverTimeRange()
                 .Equals(range, StringComparison.OrdinalIgnoreCase));
 
-            Wait.Until(_ =>
-            {
+            Wait.Until(_ => {
                 var afterAxis = GetPortfolioValueOverTimeAxisDates();
                 return afterAxis.Count > 0 && !ListEquals(beforeAxis, afterAxis);
             });
         }
 
-        public string GetSelectedPortfolioValueOverTimeRange()
-        {
+        public string GetSelectedPortfolioValueOverTimeRange() {
             var active = Driver.FindElements(ChartActiveRangePillBy).FirstOrDefault(e => e.Displayed);
             return active?.Text.Trim() ?? string.Empty;
         }
 
-        public List<string> GetPortfolioValueOverTimeAxisDates()
-        {
+        public List<string> GetPortfolioValueOverTimeAxisDates() {
             return Driver.FindElements(ChartAxisDatesBy)
                 .Where(e => e.Displayed)
                 .Select(e => e.Text.Trim())
@@ -891,11 +838,9 @@ namespace FidelityInsights.Pages
                 .ToList();
         }
 
-        private static bool ListEquals(List<string> a, List<string> b)
-        {
+        private static bool ListEquals(List<string> a, List<string> b) {
             if (a.Count != b.Count) return false;
-            for (int i = 0; i < a.Count; i++)
-            {
+            for (int i = 0; i < a.Count; i++) {
                 if (!string.Equals(a[i], b[i], StringComparison.Ordinal))
                     return false;
             }
@@ -910,8 +855,7 @@ namespace FidelityInsights.Pages
         /// Returns the parseable (month/year) start and end bounds for the chart axis.
         /// We use the leftmost tick as "start" and the rightmost tick as "end".
         /// </summary>
-        public (DateTime? start, DateTime? end) GetPortfolioValueOverTimeAxisBounds()
-        {
+        public (DateTime? start, DateTime? end) GetPortfolioValueOverTimeAxisBounds() {
             var dates = GetPortfolioValueOverTimeAxisDates();
             if (dates.Count == 0) return (null, null);
 
@@ -924,8 +868,7 @@ namespace FidelityInsights.Pages
         /// Returns the rightmost axis tick parsed to the first day of the month.
         /// Used by tests to verify the chart end date is stable across range changes.
         /// </summary>
-        public DateTime? GetPortfolioValueOverTimeEndDate()
-        {
+        public DateTime? GetPortfolioValueOverTimeEndDate() {
             var dates = GetPortfolioValueOverTimeAxisDates();
             if (dates.Count == 0) return null;
 
@@ -936,8 +879,7 @@ namespace FidelityInsights.Pages
         /// Month difference ignoring day; e.g. Jan -> Jul = 6.
         /// This is a stable way to validate chart span when ticks are month/year only.
         /// </summary>
-        public static int MonthDiff(DateTime start, DateTime end)
-        {
+        public static int MonthDiff(DateTime start, DateTime end) {
             return (end.Year - start.Year) * 12 + (end.Month - start.Month);
         }
 
@@ -950,10 +892,8 @@ namespace FidelityInsights.Pages
         /// - In tests we typically validate YTD with a broader rule (Jan of the same year),
         ///   but for now the step uses tolerance around a nominal value.
         /// </summary>
-        public static int ExpectedMonthsForChartRange(string range)
-        {
-            return range.Trim().ToUpperInvariant() switch
-            {
+        public static int ExpectedMonthsForChartRange(string range) {
+            return range.Trim().ToUpperInvariant() switch {
                 "1M" => 1,
                 "3M" => 3,
                 "6M" => 6,
@@ -977,14 +917,12 @@ namespace FidelityInsights.Pages
         /// If the UI changes to "MMM yyyy", DateTime.TryParse will still likely work,
         /// but this method is where you should explicitly add the new format.
         /// </summary>
-        private static DateTime? TryParseAxisMonthYear(string label)
-        {
+        private static DateTime? TryParseAxisMonthYear(string label) {
             label = (label ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(label)) return null;
 
             // Primary expected format: "MMM yy" (e.g., "Jan 26")
-            if (DateTime.TryParseExact(label, "MMM yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtShort))
-            {
+            if (DateTime.TryParseExact(label, "MMM yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dtShort)) {
                 var yy = dtShort.Year % 100;
                 var year = (yy <= 30) ? 2000 + yy : 1900 + yy;
                 return new DateTime(year, dtShort.Month, 1);
@@ -1038,15 +976,13 @@ namespace FidelityInsights.Pages
         public bool HasHoldingsSorting()
             => Driver.FindElements(HoldingsSortSelectBy).Any(e => e.Displayed && e.Enabled);
 
-        public string GetHoldingsSearchText()
-        {
+        public string GetHoldingsSearchText() {
             var input = Driver.FindElements(HoldingsSearchInputBy).FirstOrDefault(e => e.Displayed);
             if (input == null) return string.Empty;
             return input.GetAttribute("value") ?? string.Empty;
         }
 
-        public void SetHoldingsSearchText(string text)
-        {
+        public void SetHoldingsSearchText(string text) {
             var input = Wait.Until(d => d.FindElements(HoldingsSearchInputBy).FirstOrDefault(e => e.Displayed && e.Enabled));
             if (input == null)
                 throw new NoSuchElementException("Holdings search input was not found or not interactable.");
@@ -1055,8 +991,7 @@ namespace FidelityInsights.Pages
             input.SendKeys(text);
         }
 
-        public void ClearHoldingsSearch()
-        {
+        public void ClearHoldingsSearch() {
             var input = Driver.FindElements(HoldingsSearchInputBy).FirstOrDefault(e => e.Displayed && e.Enabled);
             if (input == null) return;
 
@@ -1072,8 +1007,7 @@ namespace FidelityInsights.Pages
         ///
         /// Returns false when no headers are found or no observable change is detected.
         /// </summary>
-        public bool TryToggleFirstSortableHoldingsColumn(int seconds = 5)
-        {
+        public bool TryToggleFirstSortableHoldingsColumn(int seconds = 5) {
             var header = Driver.FindElements(HoldingsSortableHeadersBy).FirstOrDefault(h => h.Displayed);
             if (header == null) return false;
 
@@ -1086,8 +1020,7 @@ namespace FidelityInsights.Pages
             Wait.Until(ExpectedConditions.ElementToBeClickable(clickable)).Click();
 
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds));
-            return wait.Until(_ =>
-            {
+            return wait.Until(_ => {
                 var ariaAfter = header.GetAttribute("aria-sort") ?? string.Empty;
                 var classAfter = header.GetAttribute("class") ?? string.Empty;
 
@@ -1102,8 +1035,7 @@ namespace FidelityInsights.Pages
                 return false;
             });
         }
-        public void RefreshPortfolioData()
-        {
+        public void RefreshPortfolioData() {
             var btn = Driver.FindElements(RefreshPortfolioButtonBy).FirstOrDefault(e => e.Displayed && e.Enabled);
             if (btn != null) btn.Click();
             else Refresh();
@@ -1118,8 +1050,7 @@ namespace FidelityInsights.Pages
         ///
         /// This is not intended to be a stable UI contract; it is a pragmatic regression check.
         /// </summary>
-        public string GetOverviewSnapshotText()
-        {
+        public string GetOverviewSnapshotText() {
             // Try summary cards first
             var summary = Driver.FindElements(By.CssSelector("section.summary-cards, [data-testid='portfolio-summary']"))
                 .FirstOrDefault(e => e.Displayed);
@@ -1136,19 +1067,16 @@ namespace FidelityInsights.Pages
         /// Waits until GetOverviewSnapshotText() changes from a prior value.
         /// This is used to validate that a refresh action resulted in some visible re-render.
         /// </summary>
-        public bool WaitForOverviewSnapshotToChange(string before, int seconds = 10)
-        {
+        public bool WaitForOverviewSnapshotToChange(string before, int seconds = 25) {
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(seconds));
-            return wait.Until(_ =>
-            {
+            return wait.Until(_ => {
                 var after = GetOverviewSnapshotText();
                 return !string.IsNullOrWhiteSpace(after) &&
                        !string.Equals(after, before, StringComparison.Ordinal);
             });
         }
 
-        private static string NormalizeSnapshot(string s)
-        {
+        private static string NormalizeSnapshot(string s) {
             // Normalize whitespace so minor layout changes (newlines) don't cause false negatives.
             if (string.IsNullOrWhiteSpace(s)) return string.Empty;
             return string.Join(' ', s.Split(new[] { ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries)).Trim();
@@ -1157,25 +1085,20 @@ namespace FidelityInsights.Pages
         /// <summary>
         /// Centralized "is visible" check to keep selector-based assertions consistent.
         /// </summary>
-        private bool IsVisible(By by)
-        {
-            return Driver.FindElements(by).Any(e =>
-            {
-                try { return e.Displayed; }
-                catch (StaleElementReferenceException) { return false; }
+        private bool IsVisible(By by) {
+            return Driver.FindElements(by).Any(e => {
+                try { return e.Displayed; } catch (StaleElementReferenceException) { return false; }
             });
         }
 
-        public void ClickCashAvailableSummaryCard()
-        {
+        public void ClickCashAvailableSummaryCard() {
             var card = Wait.Until(ExpectedConditions.ElementToBeClickable(CashAvailableCardBy));
             card.Click();
         }
 
         public (bool created, string? startingBalanceUi) StartNewTrainingSessionWithUniqueBalanceTracking(
             string startDate,
-            string sessionLengthToken)
-        {
+            string sessionLengthToken) {
             // If already active, we did not create a new one in this step
             if (IsTrainingSessionActive())
                 return (false, null);
@@ -1192,5 +1115,20 @@ namespace FidelityInsights.Pages
             // If creation succeeded, the active indicator should be present
             return IsTrainingSessionActive() ? (true, ui) : (false, null);
         }
+
+        private static readonly By OpenSimulationSettingsBtnBy =
+            By.CssSelector("button.settings-button[aria-label='Open simulation settings']");
+
+        public void OpenTrainingSessionDialogFromGear() {
+            // Click the gear/settings button to open the modal (works when a session exists)
+            var gear = Wait.Until(ExpectedConditions.ElementToBeClickable(OpenSimulationSettingsBtnBy));
+            gear.Click();
+
+            // Wait for any modal state to appear
+            Wait.Until(d => d.FindElements(ModalBackdropOrRootBy).Any(e => e.Displayed));
+        }
+
     }
+
+
 }

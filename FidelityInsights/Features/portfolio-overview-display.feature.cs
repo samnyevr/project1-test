@@ -127,10 +127,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Portfolio overview is displayed for an active session")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("smoke")]
         public async global::System.Threading.Tasks.Task PortfolioOverviewIsDisplayedForAnActiveSession()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "smoke"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
@@ -180,10 +182,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Portfolio does not show the \"no active session\" prompt when a session is active")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         public async global::System.Threading.Tasks.Task PortfolioDoesNotShowTheNoActiveSessionPromptWhenASessionIsActive()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "regression"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";

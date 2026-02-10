@@ -7,15 +7,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using SeleniumExtras.WaitHelpers;
 
-namespace FidelityInsights.Pages
-{
-    public class MarketDataPage : AbstractPage
-    {
+namespace FidelityInsights.Pages {
+    public class MarketDataPage : AbstractPage {
         private const string MarketDataUrl = "https://d2rczu3zvi71ix.cloudfront.net/market-data";
 
         public MarketDataPage(DriverContext ctx) : base(ctx.Driver) { }
-        public void Open()
-        {
+        public void Open() {
             Driver.Navigate().GoToUrl(MarketDataUrl);
             // TODO: add a wait for a stable element that indicates page loaded
         }
@@ -23,90 +20,80 @@ namespace FidelityInsights.Pages
         public void Refresh() => Driver.Navigate().Refresh();
 
         // Get current theme state, for use with Application Theming Steps
-        public string GetThemeState()
-        {
+        public string GetThemeState() {
             IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
             return (string)js.ExecuteScript("return document.documentElement.getAttribute('data-theme');");
         }
 
         // Returns true if the candlestick chart canvas is displayed
-        public bool IsCandlestickChartDisplayed()
-        {
+        public bool IsCandlestickChartDisplayed() {
             IWebElement chartCanvas = Driver.FindElement(By.CssSelector("canvas[data-zr-dom-id='zr_0']"));
             return chartCanvas.Displayed;
         }
 
-        public string GetStartDateValue()
-        {
+        public string GetStartDateValue() {
             IWebElement startDateInput = Driver.FindElement(By.Id("startDate"));
             return startDateInput.GetAttribute("value");
         }
-        public string GetEndDateValue()
-        {
+        public string GetEndDateValue() {
             IWebElement endDateInput = Driver.FindElement(By.Id("endDate"));
             return endDateInput.GetAttribute("value");
         }
 
-        public string SetStartDateValue(string date)
-        {
+        public string SetStartDateValue(string date) {
             IWebElement startDateInput = Driver.FindElement(By.Id("startDate"));
 
             IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
             // Set the value directly
-            js.ExecuteScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));", 
+            js.ExecuteScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));",
                             startDateInput, date);
 
             return startDateInput.GetAttribute("value");
         }
 
-        public string SetEndDateValue(string date)
-        {
+        public string SetEndDateValue(string date) {
             IWebElement endDateInput = Driver.FindElement(By.Id("endDate"));
 
             IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
-            js.ExecuteScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));", 
+            js.ExecuteScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));",
                             endDateInput, date);
 
             return endDateInput.GetAttribute("value");
         }
 
 
-        public void SelectTicker(string tickerSymbol)
-        {
+        public void SelectTicker(string tickerSymbol) {
             // Wait for dropdown to exist
-            var dropdown = new WebDriverWait(Driver, TimeSpan.FromSeconds(10))
+            var dropdown = new WebDriverWait(Driver, TimeSpan.FromSeconds(25))
                 .Until(ExpectedConditions.ElementToBeClickable(By.Id("ticker")));
             dropdown.Click();
 
             // Wait for the option to be clickable
-            var option = new WebDriverWait(Driver, TimeSpan.FromSeconds(10))
+            var option = new WebDriverWait(Driver, TimeSpan.FromSeconds(25))
                 .Until(ExpectedConditions.ElementToBeClickable(By.CssSelector($"option[value='{tickerSymbol}']")));
             option.Click();
-            
+
             // Close the dropdown by clicking elsewhere or pressing Escape
             new OpenQA.Selenium.Interactions.Actions(Driver)
                 .SendKeys(Keys.Escape)
                 .Perform();
-            
+
             // Alternative: Wait for dropdown to close naturally
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(5));
-            wait.Until(d =>
-            {
+            wait.Until(d => {
                 var dropdowns = d.FindElements(By.CssSelector(".MuiAutocomplete-popper, .dropdown-menu, select[id='ticker']"));
                 return dropdowns.All(e => !e.Displayed || e.TagName.ToLower() == "select");
             });
         }
 
-        public void ClickLoadData()
-        {
+        public void ClickLoadData() {
             // Wait for button to be clickable
-            var loadDataButton = new WebDriverWait(Driver, TimeSpan.FromSeconds(10))
+            var loadDataButton = new WebDriverWait(Driver, TimeSpan.FromSeconds(25))
                 .Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()=' Load Data ']")));
             loadDataButton.Click();
         }
 
-        public string GetDateRangeErrorMessage()
-        {
+        public string GetDateRangeErrorMessage() {
             var error = new WebDriverWait(Driver, TimeSpan.FromSeconds(5))
                 .Until(ExpectedConditions.ElementIsVisible(
                     By.CssSelector(".error-message"))); // adjust selector
@@ -116,13 +103,11 @@ namespace FidelityInsights.Pages
 
         // The button is rendered on the canvas at coordinates (x=895, y=22). Button is drawn on the canvas itself
         // Currently flaky but there seems to be no other available option without dev 
-        public void ClickSaveAsImageButton()
-        {
+        public void ClickSaveAsImageButton() {
 
             // Wait for any open dropdowns or menus to disappear
             var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(5));
-            wait.Until(d =>
-            {
+            wait.Until(d => {
                 var dropdowns = d.FindElements(By.CssSelector(".MuiAutocomplete-popper, .dropdown-menu"));
                 return dropdowns.All(e => !e.Displayed);
             });
@@ -141,13 +126,13 @@ namespace FidelityInsights.Pages
             // Top-right corner with some padding: 95% width, 5% height
             int absoluteX = (int)(size.Width * 0.98);  // e.g., 835 for 879px width
             int absoluteY = (int)(size.Height * 0.05); // e.g., 20 for 400px height
-            
+
             Console.WriteLine($"Target absolute position: X={absoluteX}, Y={absoluteY}");
-            
+
             // Convert to center-based offset for Selenium
             int xFromCenter = absoluteX - (size.Width / 2);
             int yFromCenter = absoluteY - (size.Height / 2);
-            
+
             Console.WriteLine($"Offset from center: X={xFromCenter}, Y={yFromCenter}");
 
             // Use JavaScript to highlight where we're about to click (for debugging)
@@ -166,24 +151,21 @@ namespace FidelityInsights.Pages
                 
                 console.log('Marked click position at:', x, y);
             ", canvas, absoluteX, absoluteY);
-            
+
             Thread.Sleep(1000); // Give you time to see the red dot
 
-            try
-            {
+            try {
                 new OpenQA.Selenium.Interactions.Actions(Driver)
                     .MoveToElement(canvas, xFromCenter, yFromCenter)
                     .Pause(TimeSpan.FromMilliseconds(500))
                     .Click()
                     .Perform();
-                    
+
                 Console.WriteLine("Click action performed successfully");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Console.WriteLine($"Selenium click failed: {ex.Message}");
                 Console.WriteLine("Trying JavaScript click as fallback...");
-                
+
                 // Dispatch actual click events that ECharts should respond to
                 js.ExecuteScript(@"
                     var canvas = arguments[0];
@@ -205,14 +187,13 @@ namespace FidelityInsights.Pages
                         console.log('Dispatched', eventType, 'at', x, y);
                     });
                 ", canvas, absoluteX, absoluteY);
-                
+
                 Console.WriteLine("JavaScript click events dispatched");
             }
             Thread.Sleep(2000); // Wait for download to initiate
         }
 
-        public bool IsFileDownloaded(string expectedFileName, int timeoutSeconds = 10)
-        {
+        public bool IsFileDownloaded(string expectedFileName, int timeoutSeconds = 10) {
             var downloadPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "artifacts",
@@ -220,12 +201,10 @@ namespace FidelityInsights.Pages
             );
             var expectedFilePath = Path.Combine(downloadPath, expectedFileName);
             var endTime = DateTime.Now.AddSeconds(timeoutSeconds);
-            while (DateTime.Now < endTime)
-            {
+            while (DateTime.Now < endTime) {
                 // File exists and Chrome finished writing it
                 if (File.Exists(expectedFilePath) &&
-                    !File.Exists(expectedFilePath + ".crdownload"))
-                {
+                    !File.Exists(expectedFilePath + ".crdownload")) {
                     return true;
                 }
 

@@ -73,6 +73,7 @@ namespace FidelityInsights.StepDefinitions {
             System.Threading.Thread.Sleep(500); // wait for toggle to take effect
 
             _tradePage.EnterQuantity(qty);
+            _tradePage.ClickSellToggle();
         }
 
         // --------- WHEN steps (SELL-specific wording) -----
@@ -80,6 +81,7 @@ namespace FidelityInsights.StepDefinitions {
         [When("the trader inputs a sell Quantity of \"(.*)\" shares")]
         public void WhenTraderInputsSellQuantity(string qty) {
             _tradePage.EnterQuantity(qty);
+            _tradePage.ClickSellToggle();
         }
 
         [When("the trader click on the Sell button")]
@@ -91,10 +93,10 @@ namespace FidelityInsights.StepDefinitions {
         [When("the trader click on the Max button on the Sell Stock page")]
         public void WhenTraderClicksMaxOnSellStockPage() {
             BuyAALFirst("MAX");   // ensure we have plenty to sell
-            _tradePage.ClickSellToggle();
             System.Threading.Thread.Sleep(500); // wait for toggle to take effect
 
             _tradePage.SelectTicker("AAL");
+            _tradePage.ClickSellToggle();
             _tradePage.ClickMax();
         }
 

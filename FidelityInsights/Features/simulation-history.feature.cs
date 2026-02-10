@@ -135,9 +135,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("View Paused and Completed Sessions")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task ViewPausedAndCompletedSessions()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("View Paused and Completed Sessions", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -174,9 +176,11 @@ await this.FeatureBackgroundAsync();
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Sort Paused Sessions by Balance")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task SortPausedSessionsByBalance()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sort Paused Sessions by Balance", "", tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -213,9 +217,11 @@ await this.FeatureBackgroundAsync();
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Verify Gain and Loss Styling")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task VerifyGainAndLossStyling()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "2";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Verify Gain and Loss Styling", "", tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);

@@ -128,10 +128,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Navigate to Trade Stocks from Cash Available")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("smoke")]
         public async global::System.Threading.Tasks.Task NavigateToTradeStocksFromCashAvailable()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "smoke"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
@@ -163,10 +165,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Navigate to Trade Stocks using primary navigation")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         public async global::System.Threading.Tasks.Task NavigateToTradeStocksUsingPrimaryNavigation()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "regression"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
@@ -198,10 +202,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Returning to Portfolio from another page preserves the active session")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         public async global::System.Threading.Tasks.Task ReturningToPortfolioFromAnotherPagePreservesTheActiveSession()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "regression"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "2";

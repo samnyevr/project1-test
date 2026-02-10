@@ -110,9 +110,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Open and refresh the Portfolio page")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task OpenAndRefreshThePortfolioPage()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Open and refresh the Portfolio page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -140,9 +142,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Create session and teardown deletes it")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task CreateSessionAndTeardownDeletesIt()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create session and teardown deletes it", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);

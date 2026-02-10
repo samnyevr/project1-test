@@ -112,9 +112,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Sell a stock Successfully")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task SellAStockSuccessfully()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sell a stock Successfully", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -155,9 +157,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Sell a stock successfully with Maximum Quantity")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task SellAStockSuccessfullyWithMaximumQuantity()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sell a stock successfully with Maximum Quantity", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -198,9 +202,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Sell a stock without sufficient shares")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task SellAStockWithoutSufficientShares()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "2";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sell a stock without sufficient shares", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -237,9 +243,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Sell a stock with no shares owned")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task SellAStockWithNoSharesOwned()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "3";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sell a stock with no shares owned", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
@@ -276,9 +284,11 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Sell a stock with quick sell functionality")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public async global::System.Threading.Tasks.Task SellAStockWithQuickSellFunctionality()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "Ignore"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "4";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sell a stock with quick sell functionality", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);

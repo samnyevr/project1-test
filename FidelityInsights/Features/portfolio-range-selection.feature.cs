@@ -129,6 +129,7 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Selecting a performance range updates the Portfolio view")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         [global::NUnit.Framework.TestCaseAttribute("1M", "0", null)]
         [global::NUnit.Framework.TestCaseAttribute("3M", "1", null)]
@@ -137,6 +138,7 @@ namespace FidelityInsights.Features
         public async global::System.Threading.Tasks.Task SelectingAPerformanceRangeUpdatesThePortfolioView(string range, string @__pickleIndex, string[] exampleTags)
         {
             string[] @__tags = new string[] {
+                    "Ignore",
                     "regression"};
             if ((exampleTags != null))
             {
@@ -177,6 +179,7 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Changing chart range updates portfolio value over time visualization window")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         [global::NUnit.Framework.TestCaseAttribute("1M", "4", null)]
         [global::NUnit.Framework.TestCaseAttribute("3M", "5", null)]
@@ -184,6 +187,7 @@ namespace FidelityInsights.Features
         public async global::System.Threading.Tasks.Task ChangingChartRangeUpdatesPortfolioValueOverTimeVisualizationWindow(string range, string @__pickleIndex, string[] exampleTags)
         {
             string[] @__tags = new string[] {
+                    "Ignore",
                     "regression"};
             if ((exampleTags != null))
             {

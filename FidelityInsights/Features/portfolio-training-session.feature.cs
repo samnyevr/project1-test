@@ -130,10 +130,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Create a new training session when none exists")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("smoke")]
         public async global::System.Threading.Tasks.Task CreateANewTrainingSessionWhenNoneExists()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "smoke"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
@@ -176,10 +178,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Canceling training session creation does not start a session")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         public async global::System.Threading.Tasks.Task CancelingTrainingSessionCreationDoesNotStartASession()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "regression"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
@@ -217,6 +221,7 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Training session cannot be created with invalid inputs")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("validation")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         [global::NUnit.Framework.TestCaseAttribute("negative", "2", null)]
@@ -224,6 +229,7 @@ namespace FidelityInsights.Features
         public async global::System.Threading.Tasks.Task TrainingSessionCannotBeCreatedWithInvalidInputs(string balance, string @__pickleIndex, string[] exampleTags)
         {
             string[] @__tags = new string[] {
+                    "Ignore",
                     "validation",
                     "regression"};
             if ((exampleTags != null))
@@ -273,10 +279,12 @@ namespace FidelityInsights.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Active training session persists after refresh")]
+        [global::NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         [global::NUnit.Framework.CategoryAttribute("regression")]
         public async global::System.Threading.Tasks.Task ActiveTrainingSessionPersistsAfterRefresh()
         {
             string[] tagsOfScenario = new string[] {
+                    "Ignore",
                     "regression"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "4";

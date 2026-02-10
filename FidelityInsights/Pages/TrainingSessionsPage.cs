@@ -24,7 +24,7 @@ namespace FidelityInsights.Pages
             return urlOk && rootOk;
         }
 
-        public void WaitForLoaded(int seconds = 25)
+        public void WaitForLoaded(int seconds = 10)
         {
             Wait.Timeout = TimeSpan.FromSeconds(seconds);
             Wait.Until(_ => IsAt());

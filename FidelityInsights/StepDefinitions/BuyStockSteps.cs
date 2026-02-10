@@ -6,17 +6,38 @@ namespace FidelityInsights.StepDefinitions {
     [Binding]
     public class BuyStockSteps {
         private readonly TradeStockPage _buyStockPage;
+        private readonly PortfolioOverviewPage _portfolio;
+        private readonly ScenarioContext _scenario;
 
-        public BuyStockSteps(TradeStockPage buyStockPage) {
+        public BuyStockSteps(
+            TradeStockPage buyStockPage,
+            PortfolioOverviewPage portfolio,
+            ScenarioContext scenario)
+        {
             _buyStockPage = buyStockPage;
+            _portfolio = portfolio;
+            _scenario = scenario;
+        }
+
+        [Given("a new funded trading session is started")]
+        public void GivenANewFundedTradingSessionIsStarted()
+        {
+            _portfolio.Open();
+
+            var (created, startingBalanceUi) =
+                _portfolio.EnsureActiveTrainingSessionWithUniqueBalance();
+
+            // These are what your AfterScenario hook is looking for
+            _scenario["CreatedSession"] = created;
+            _scenario["CreatedStartingBalanceUi"] = startingBalanceUi;
+
+            _portfolio.NavigateToTradeStocksFromHeader();
         }
 
         // -------- Scenario 1 --------
 
         [Given("the trader select a stock with ticker \"(.*)\"")]
         public void GivenTraderSelectsTicker(string ticker) {
-            _buyStockPage.Open();
-            _buyStockPage.StartNewSession();
             _buyStockPage.SelectTicker(ticker);
         }
 
@@ -151,14 +172,10 @@ namespace FidelityInsights.StepDefinitions {
 
         [Given("the trader who is trying to sell click on \"(.*)\" in Your Holdings section")]
         public void GivenTraderSellClicksTickerInHoldings(string ticker) {
-            _buyStockPage.Open();
-            _buyStockPage.StartNewSession();
-
+            // Background already ensured active session and trade page
             _buyStockPage.SelectTicker(ticker);
             _buyStockPage.EnterQuantity("10");
             _buyStockPage.ClickBuy();
-
-            System.Threading.Thread.Sleep(1000);
 
             _buyStockPage.ClickTickerInHoldings(ticker);
         }
