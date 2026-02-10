@@ -1,4 +1,3 @@
-# language: en
 Feature: Calculator
 
 @mytag
