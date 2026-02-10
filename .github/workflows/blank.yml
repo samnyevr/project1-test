@@ -1,52 +1,42 @@
 name: CI
 
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-    branches:
-    - main
-    
 permissions:
   contents: read
   actions: read
   checks: write
-    
+
 jobs:
   build_and_test:
-
     env:
-      BUILD_CONFIG: 'Release'
-      SOLUTION: 'TestProject1.slnx'
+      BUILD_CONFIG: "Release"
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: '8.0.x'
-        
-    - name: Setup Reqnroll
-      run: dotnet new install Reqnroll.Templates.DotNet
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
 
-    - name: Restore dependencies
-      run: dotnet restore $SOLUTION
+      - name: Setup Reqnroll
+        run: dotnet new install Reqnroll.Templates.DotNet
 
-    - name: Build
-      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG
-      
-    - name: Test
-      run: dotnet test $SOLUTION --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
-      
-    - name: Test Report
-      uses: dorny/test-reporter@v2
-      if: always()
-      with:
-        name: DotNET Tests
-        path: "**/test-results.trx"                            
-        reporter: dotnet-trx
-        fail-on-error: false
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-build --configuration $BUILD_CONFIG
+
+      - name: Test
+        run: dotnet test --no-build --configuration $BUILD_CONFIG --logger "trx;LogFileName=test-results.trx" || true
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: always()
+        with:
+          name: DotNET Tests
+          path: "**/test-results.trx"
+          reporter: dotnet-trx
+          fail-on-error: false
