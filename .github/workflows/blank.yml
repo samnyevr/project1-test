@@ -52,8 +52,12 @@ jobs:
           fail-on-error: false
 
       - name: Add XML report to job summary
+        shell: bash
         run: |
           echo '### XML Report Content' >> $GITHUB_STEP_SUMMARY
           echo '```xml' >> $GITHUB_STEP_SUMMARY
-          cat /github/workspace/TestResults/**/coverage.cobertura.xml >> $GITHUB_STEP_SUMMARY
+          # Find the real coverage file
+          COV_FILE=$(find TestResults -name "coverage.cobertura.xml" | head -n 1)
+          cat "$COV_FILE" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+
