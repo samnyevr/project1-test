@@ -40,7 +40,7 @@ jobs:
       - name: Run Tests and Generate Coverage
         id: test
         continue-on-error: true
-        run: run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --results-directory "./TestResults"
+        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --results-directory "./TestResults"
         
       - name: Test Report
         uses: dorny/test-reporter@v2
