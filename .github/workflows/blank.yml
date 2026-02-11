@@ -37,8 +37,12 @@ jobs:
       - name: Build Solution
         run: dotnet build --no-restore --configuration Release
 
-      - name: Test
-        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=FidelityInsights/TestResults/coverage.cobertura.xml || true
+      - name: Run Tests and Generate Coverage
+        id: test
+        continue-on-error: true
+        run: |
+          mkdir -p FidelityInsights/TestResults
+          dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=FidelityInsights/TestResults/coverage.cobertura.xml
 
       - name: Test Report
         uses: dorny/test-reporter@v2
